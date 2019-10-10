@@ -1,0 +1,60 @@
+body {
+  margin: 0;
+  background: #121212;
+  color: #fff;
+}
+
+img {
+    width: 64%;
+}
+
+input[type="text"] {
+  border: 0;
+  padding: 0 0 0 12px;
+  background: #313131;
+  color: #fff;
+  width: 90vw;
+  height: 100%;
+  outline-width: 0;
+  font-size: 32px;
+}
+
+input[type="submit"] {
+  border: 0;
+  padding: 0;
+  background: #313131;
+  color: #fff;
+  height: 100%;
+  text-align: center;
+  width: calc(10vw - 12px);
+  outline-width: 0;
+  font-size: 32px;
+}
+
+input[type="submit"]:active {
+  background: #424242;
+}
+
+.form-container {
+    flex: 1;
+    height: 10vh;
+  }
+
+.teams-container {
+  display: flex;
+  flex-direction: row;
+}
+
+.team-container {
+  flex: 1;
+  height: 90vh;
+  text-align: center;
+}
+
+.members-container {
+  padding: 56px;
+}
+
+.highlight {
+  box-shadow: inset 0 100vw 0 rgba(255, 255, 255, 0.3);
+}
