@@ -122,13 +122,13 @@ export default class App extends Component {
     const { currentInputText, teams } = this.state;
     const drawnTeamIndex = this.handleDrawTeam();
     const drawnTeam = teams[drawnTeamIndex];
-    if (drawnTeam) {
+    if (drawnTeam && currentInputText && currentInputText.replace(/\s/g, "")) {
       const newTeam = [{ ...drawnTeam, members: [...drawnTeam.members, currentInputText] }]
       const newTeams = teams.map(obj => newTeam.find(o => o.name === obj.name) || obj);
 
       this.setState({ currentInputText: '', teams: newTeams, lastTeamChoosed: drawnTeamIndex });
     } else {
-      alert('Total number of people reached');
+      !drawnTeam ? alert('Total number of people reached') : alert('Please input a valid name');
     }
     event.preventDefault();
   }
