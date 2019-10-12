@@ -115,7 +115,7 @@ export default class App extends Component {
   async componentDidMount() {
     let total;
     do {
-      total = prompt('How many people in total?', 24);
+      total = prompt('How many people in total?', this.state.total);
     } while (!total || isNaN(total.replace(/\s/g, "-")));
 
     this.setState({ teams, total });
