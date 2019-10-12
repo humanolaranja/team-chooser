@@ -143,7 +143,7 @@ export default class App extends Component {
             return (
               <div key={`${index}-${team.name}`} className={'team-container ' + (team.name === currentHighlight ? 'highlight' : '')} style={{ backgroundColor: team.color }}>
                 <h1>{team.name}</h1>
-                <img src={imageSource} alt={team.name} />
+                <img src={imageSource} alt={team.name} title={team.name} />
                 <div className="members-container">
                   {team.members.map((member, index) => {
                     return (
