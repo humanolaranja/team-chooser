@@ -109,8 +109,7 @@ export default class App extends Component {
     else {
       do {
         teamIndex = Math.floor(Math.random() * (max - min)) + min;
-        if (teamIndex >= lastTeamChoosed) teamIndex += 1;
-      } while (teamIndex === this.handleGetCurrentMaxTeam() || this.handleTeamAlreadyFull(teamIndex) || !teams[teamIndex]);
+      } while (teamIndex === this.handleGetCurrentMaxTeam() || this.handleTeamAlreadyFull(teamIndex));
     }
 
     return teamIndex;
