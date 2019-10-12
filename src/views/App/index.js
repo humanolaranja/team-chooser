@@ -134,10 +134,16 @@ export default class App extends Component {
         </div>
         <div className="teams-container">
           {teams.map((team, index) => {
+            let imageSource;
+            try {
+              imageSource = require(`../../assets/images/${team.imageUrl}`);
+            } catch (error) {
+              imageSource = null;
+            }
             return (
               <div key={`${index}-${team.name}`} className={'team-container ' + (team.name === currentHighlight ? 'highlight' : '')} style={{ backgroundColor: team.color }}>
                 <h1>{team.name}</h1>
-                <img src={require(`../../assets/images/${team.imageUrl}`)} alt={team.name} />
+                <img src={imageSource} alt={team.name} />
                 <div className="members-container">
                   {team.members.map((member, index) => {
                     return (
