@@ -1,0 +1,26 @@
+[
+    {
+      "name": "Bulbassauro",
+      "color": "#374D2C",
+      "imageUrl": "bulbassauro.png",
+      "members": []
+    },
+    {
+      "name": "Charmander",
+      "color": "#8F4A43",
+      "imageUrl": "charmander.png",
+      "members": []
+    },
+    {
+      "name": "Squirtle",
+      "color": "#334555",
+      "imageUrl": "squirtle.png",
+      "members": []
+    },
+    {
+      "name": "Pikachu",
+      "color": "#E4BE43",
+      "imageUrl": "pikachu.png",
+      "members": []
+    }
+]

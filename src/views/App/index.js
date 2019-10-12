@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import teams from '../../config/teams.json';
 import '../../styles/main.css';
 
 export default class App extends Component {
@@ -7,32 +8,7 @@ export default class App extends Component {
     currentHighlight: '',
     lastTeamChoosed: null,
     total: 24,
-    teams: [
-      {
-        name: 'Bulbassauro',
-        color: '#374D2C',
-        imageUrl: 'bulbassauro.png',
-        members: []
-      },
-      {
-        name: 'Charmander',
-        color: '#8F4A43',
-        imageUrl: 'charmander.png',
-        members: []
-      },
-      {
-        name: 'Squirtle',
-        color: '#334555',
-        imageUrl: 'squirtle.png',
-        members: []
-      },
-      {
-        name: 'Pikachu',
-        color: '#E4BE43',
-        imageUrl: 'pikachu.png',
-        members: []
-      },
-    ]
+    teams: []
   }
 
   handleGetSizes = (length = false) => {
@@ -93,7 +69,7 @@ export default class App extends Component {
   }
 
   handleDrawTeam = () => {
-    const { lastTeamChoosed, teams } = this.state;
+    const { lastTeamChoosed } = this.state;
     let teamIndex = null;
     const min = 0;
     const max = this.handleGetSizes(true);
@@ -136,13 +112,13 @@ export default class App extends Component {
     event.preventDefault();
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     let total;
     do {
       total = prompt('How many people in total?', 24);
     } while (!total || isNaN(total.replace(/\s/g, "-")));
 
-    this.setState({ total });
+    this.setState({ teams, total });
   }
 
   render() {
