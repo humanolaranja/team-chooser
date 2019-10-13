@@ -4,10 +4,13 @@ import defaultValues from '../../config/defaultValues.json';
 import '../../styles/main.css';
 
 export default class App extends Component {
-  iteration = -1;
+  drawIteration = -1;
+  showSelected = -1;
   animateNumber = defaultValues.defaultAnimationTimes;
   state = {
     total: defaultValues.totalDefault,
+    isDrawing: false,
+    isShowingSelected: false,
     currentInputText: '',
     currentHighlight: '',
     lastTeamChoosedIndex: null,
@@ -128,23 +131,34 @@ export default class App extends Component {
     return lastTeamChoosedIndex === (this.getSizes(true) - 1) ? -1 : lastTeamChoosedIndex;
   }
 
-  animate = () => {
+  animateDraw = () => {
+    if (this.drawIteration >= (this.getSizes(true) * this.animateNumber) + this.getExtraIteration()) {
+      this.drawIteration = -1;
+      this.setState({ isDrawing: false, isShowingSelected: true });
+      return;
+    }
+
+    this.drawIteration += 1
+    this.setState({ currentHighlight: Array(this.animateNumber + 1).fill(this.getAllNames()).flat()[this.drawIteration] });
+  }
+
+  animateSelected = () => {
     const { lastTeamChoosedIndex, teams, lastTeamChoosed } = this.state;
 
-    if (this.iteration >= (this.getSizes(true) * this.animateNumber) + this.getExtraIteration()) {
-      this.iteration = -1;
-      this.setState({ isDrawing: false, currentHighlight: teams[lastTeamChoosedIndex].name, teams: lastTeamChoosed });
+    if (this.showSelected > 3) {
+      this.showSelected = -1;
+      this.setState({ isShowingSelected: false, teams: lastTeamChoosed, currentHighlight: '' });
       this.name.focus();
       return;
     }
 
-    this.iteration += 1
-
-    this.setState({ currentHighlight: Array(this.animateNumber + 1).fill(this.getAllNames()).flat()[this.iteration] });
+    this.showSelected += 1
+    this.showSelected % 2 === 0 ? this.setState({ currentHighlight: teams[lastTeamChoosedIndex].name }) : this.setState({ currentHighlight: '' });
   }
 
   componentDidUpdate() {
-    if (this.state.isDrawing) setTimeout(this.animate, defaultValues.defaultAnimationMs)
+    if (this.state.isDrawing) setTimeout(this.animateDraw, defaultValues.defaultAnimationMs);
+    if (this.state.isShowingSelected) setTimeout(this.animateSelected, defaultValues.defaultAnimationMs);
   }
 
   async componentDidMount() {
@@ -164,8 +178,8 @@ export default class App extends Component {
       <div>
         <div className="form-container">
           <form className="form-container" onSubmit={this.handleSubmit}>
-            <input 
-              ref={(input) => { this.name = input; }} 
+            <input
+              ref={(input) => { this.name = input; }}
               type="text"
               value={currentInputText}
               disabled={isDrawing}
