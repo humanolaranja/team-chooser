@@ -132,7 +132,8 @@ export default class App extends Component {
 
     if (this.iteration >= (this.getSizes(true) * this.animateNumber) + this.getExtraIteration()) {
       this.iteration = 0
-      this.setState({ isDrawing: false, currentHighlight: teams[lastTeamChoosedIndex].name, teams: lastTeamChoosed })
+      this.setState({ isDrawing: false, currentHighlight: teams[lastTeamChoosedIndex].name, teams: lastTeamChoosed });
+      this.name.focus();
       return;
     }
 
@@ -155,13 +156,19 @@ export default class App extends Component {
   }
 
   render() {
-    const { currentInputText, currentHighlight, teams } = this.state;
+    const { currentInputText, currentHighlight, teams, isDrawing } = this.state;
 
     return (
       <div>
         <div className="form-container">
           <form className="form-container" onSubmit={this.handleSubmit}>
-            <input type="text" value={currentInputText} onChange={this.handleChange} />
+            <input 
+              ref={(input) => { this.name = input; }} 
+              type="text"
+              value={currentInputText}
+              disabled={isDrawing}
+              onChange={this.handleChange}
+            />
             <input type="submit" value=">" />
           </form>
         </div>
