@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import teams from '../../config/teams.json';
+import defaultValues from '../../config/defaultValues.json';
 import '../../styles/main.css';
 
 export default class App extends Component {
-  iteration = -1; // dont't change this, initial value
-  animateNumber = 3; // change this to set how many times in the array animation will run
+  iteration = -1;
+  animateNumber = defaultValues.defaultAnimationTimes;
   state = {
-    total: 24, // change this to set default value
+    total: defaultValues.totalDefault,
     currentInputText: '',
     currentHighlight: '',
     lastTeamChoosedIndex: null,
@@ -143,7 +144,7 @@ export default class App extends Component {
   }
 
   componentDidUpdate() {
-    if (this.state.isDrawing) setTimeout(this.animate, 100)
+    if (this.state.isDrawing) setTimeout(this.animate, defaultValues.defaultAnimationMs)
   }
 
   async componentDidMount() {
