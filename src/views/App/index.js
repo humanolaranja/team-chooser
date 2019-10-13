@@ -3,7 +3,7 @@ import teams from '../../config/teams.json';
 import '../../styles/main.css';
 
 export default class App extends Component {
-  iteration = 0; // dont't change this, initial value
+  iteration = -1; // dont't change this, initial value
   animateNumber = 3; // change this to set how many times in the array animation will run
   state = {
     total: 24, // change this to set default value
@@ -121,17 +121,11 @@ export default class App extends Component {
     event.preventDefault();
   }
 
-  getExtraIteration = () => {
-    const { lastTeamChoosedIndex } = this.state;
-
-    return lastTeamChoosedIndex === (this.getSizes(true) - 1) ? 0 : 1;
-  }
-
   animate = () => {
     const { lastTeamChoosedIndex, teams, lastTeamChoosed } = this.state;
 
-    if (this.iteration >= (this.getSizes(true) * this.animateNumber) + this.getExtraIteration()) {
-      this.iteration = 0
+    if (this.iteration >= (this.getSizes(true) * this.animateNumber) + lastTeamChoosedIndex) {
+      this.iteration = -1;
       this.setState({ isDrawing: false, currentHighlight: teams[lastTeamChoosedIndex].name, teams: lastTeamChoosed });
       this.name.focus();
       return;
@@ -153,6 +147,7 @@ export default class App extends Component {
     } while (!total || isNaN(total.replace(/\s/g, "-")));
 
     this.setState({ teams, total });
+    this.name.focus();
   }
 
   render() {
