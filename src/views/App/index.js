@@ -25,11 +25,18 @@ export default class App extends Component {
     return length ? sizes.length : sizes;
   }
 
-  getAllNames = () => {
+  getAllTeamNames = () => {
     const { teams } = this.state;
     const names = teams.map((el) => el.name);
 
     return names;
+  }
+
+  getAllMembersNames = () => {
+    const { teams } = this.state;
+    const members = teams.map((el) => el.members);
+
+    return members.flat();
   }
 
   calculateMaxTeamMembers = () => {
@@ -112,14 +119,16 @@ export default class App extends Component {
     const drawnTeamIndex = this.handleDrawTeam();
     const drawnTeam = teams[drawnTeamIndex];
 
-    if (drawnTeam && currentInputText && currentInputText.replace(/\s/g, "")) {
+    if (drawnTeam && currentInputText && currentInputText.replace(/\s/g, "") && this.getAllMembersNames().indexOf(currentInputText) < 0) {
       const newTeam = [{ ...drawnTeam, members: [...drawnTeam.members, currentInputText] }]
       const newTeams = teams.map(obj => newTeam.find(o => o.name === obj.name) || obj);
 
       this.handleDrawing();
       this.setState({ currentInputText: '', lastTeamChoosed: newTeams, lastTeamChoosedIndex: drawnTeamIndex });
+    } else if(!drawnTeam) {
+      alert('Total number of people reached');
     } else {
-      !drawnTeam ? alert('Total number of people reached') : alert('Please input a valid name');
+      this.getAllMembersNames().indexOf(currentInputText) > -1 ? alert('Member already in a team') : alert('Please input a valid name');
     }
 
     event.preventDefault();
@@ -139,7 +148,7 @@ export default class App extends Component {
     }
 
     this.drawIteration += 1
-    this.setState({ currentHighlight: Array(this.animateNumber + 1).fill(this.getAllNames()).flat()[this.drawIteration] });
+    this.setState({ currentHighlight: Array(this.animateNumber + 1).fill(this.getAllTeamNames()).flat()[this.drawIteration] });
   }
 
   animateSelected = () => {
