@@ -3,29 +3,32 @@ import teams from '../../config/teams.json';
 import '../../styles/main.css';
 
 export default class App extends Component {
+  iteration = 0; // dont't change this, initial value
+  animateNumber = 3; // change this to set how many times in the array animation will run
   state = {
+    total: 24, // change this to set default value
     currentInputText: '',
     currentHighlight: '',
-    lastTeamChoosed: null,
-    total: 24,
+    lastTeamChoosedIndex: null,
+    lastTeamChoosed: [],
     teams: []
   }
 
-  handleGetSizes = (length = false) => {
+  getSizes = (length = false) => {
     const { teams } = this.state;
     const sizes = teams.map((el) => el.members.length);
 
     return length ? sizes.length : sizes;
   }
 
-  handleGetAllNames = () => {
+  getAllNames = () => {
     const { teams } = this.state;
     const names = teams.map((el) => el.name);
 
     return names;
   }
 
-  handleCalculateMaxTeamMembers = () => {
+  calculateMaxTeamMembers = () => {
     const { teams, total } = this.state;
     const teamsLength = teams.length;
     const maxlength = total / teamsLength;
@@ -33,9 +36,9 @@ export default class App extends Component {
     return Math.ceil(maxlength);
   }
 
-  handleTeamAlreadyFull = (teamIndex) => {
-    const sizes = this.handleGetSizes();
-    const maxlength = this.handleCalculateMaxTeamMembers();
+  isTeamAlreadyFull = (teamIndex) => {
+    const sizes = this.getSizes();
+    const maxlength = this.calculateMaxTeamMembers();
 
     if (sizes[teamIndex] >= maxlength) {
       return true;
@@ -44,9 +47,9 @@ export default class App extends Component {
     return false;
   }
 
-  handleAlreadyFull = () => {
+  isTeamsAlreadyFull = () => {
     const { total } = this.state;
-    const sizes = this.handleGetSizes();
+    const sizes = this.getSizes();
     const alreadyFull = sizes.reduce((a, b) => a + b);
 
     if (alreadyFull >= total) {
@@ -56,36 +59,36 @@ export default class App extends Component {
     return false;
   }
 
-  handleGetCurrentMaxTeam = (index = true) => {
-    const sizes = this.handleGetSizes();
+  getCurrentMaxTeam = (index = true) => {
+    const sizes = this.getSizes();
 
     return index ? sizes.indexOf(Math.max(...sizes)) : Math.max(...sizes);
   }
 
-  handleGetCurrentMinTeam = (index = true) => {
-    const sizes = this.handleGetSizes();
+  getCurrentMinTeam = (index = true) => {
+    const sizes = this.getSizes();
 
     return index ? sizes.indexOf(Math.min(...sizes)) : Math.min(...sizes);
   }
 
   handleDrawTeam = () => {
-    const { lastTeamChoosed } = this.state;
+    const { lastTeamChoosedIndex } = this.state;
     let teamIndex = null;
     const min = 0;
-    const max = this.handleGetSizes(true);
+    const max = this.getSizes(true);
 
-    if (this.handleAlreadyFull()) {
+    if (this.isTeamsAlreadyFull()) {
       teamIndex = null;
-    } else if (lastTeamChoosed === null) {
+    } else if (lastTeamChoosedIndex === null) {
       teamIndex = Math.floor(Math.random() * (max - min + 1)) + min;
     }
-    else if (this.handleGetCurrentMaxTeam(false) - this.handleGetCurrentMinTeam(false) > 1) {
-      teamIndex = this.handleGetCurrentMinTeam();
+    else if (this.getCurrentMaxTeam(false) - this.getCurrentMinTeam(false) > 1) {
+      teamIndex = this.getCurrentMinTeam();
     }
     else {
       do {
         teamIndex = Math.floor(Math.random() * (max - min)) + min;
-      } while (teamIndex === this.handleGetCurrentMaxTeam() || this.handleTeamAlreadyFull(teamIndex));
+      } while (teamIndex === this.getCurrentMaxTeam() || this.isTeamAlreadyFull(teamIndex));
     }
 
     return teamIndex;
@@ -93,6 +96,11 @@ export default class App extends Component {
 
   handleChange = (event) => {
     this.setState({ currentInputText: event.target.value });
+  }
+
+  handleDrawing = () => {
+    if (!this.state.isDrawing)
+      this.setState({ isDrawing: true })
   }
 
   handleSubmit = (event) => {
@@ -104,12 +112,37 @@ export default class App extends Component {
       const newTeam = [{ ...drawnTeam, members: [...drawnTeam.members, currentInputText] }]
       const newTeams = teams.map(obj => newTeam.find(o => o.name === obj.name) || obj);
 
-      this.setState({ currentInputText: '', teams: newTeams, lastTeamChoosed: drawnTeamIndex });
+      this.handleDrawing();
+      this.setState({ currentInputText: '', lastTeamChoosed: newTeams, lastTeamChoosedIndex: drawnTeamIndex });
     } else {
       !drawnTeam ? alert('Total number of people reached') : alert('Please input a valid name');
     }
 
     event.preventDefault();
+  }
+
+  getExtraIteration = () => {
+    const { lastTeamChoosedIndex } = this.state;
+
+    return lastTeamChoosedIndex === (this.getSizes(true) - 1) ? 0 : 1;
+  }
+
+  animate = () => {
+    const { lastTeamChoosedIndex, teams, lastTeamChoosed } = this.state;
+
+    if (this.iteration >= (this.getSizes(true) * this.animateNumber) + this.getExtraIteration()) {
+      this.iteration = 0
+      this.setState({ isDrawing: false, currentHighlight: teams[lastTeamChoosedIndex].name, teams: lastTeamChoosed })
+      return;
+    }
+
+    this.iteration += 1
+
+    this.setState({ currentHighlight: Array(this.animateNumber + 1).fill(this.getAllNames()).flat()[this.iteration] });
+  }
+
+  componentDidUpdate() {
+    if (this.state.isDrawing) setTimeout(this.animate, 100)
   }
 
   async componentDidMount() {
