@@ -121,10 +121,16 @@ export default class App extends Component {
     event.preventDefault();
   }
 
+  getExtraIteration = () => {
+    const { lastTeamChoosedIndex } = this.state;
+
+    return lastTeamChoosedIndex === (this.getSizes(true) - 1) ? -1 : lastTeamChoosedIndex;
+  }
+
   animate = () => {
     const { lastTeamChoosedIndex, teams, lastTeamChoosed } = this.state;
 
-    if (this.iteration >= (this.getSizes(true) * this.animateNumber) + lastTeamChoosedIndex) {
+    if (this.iteration >= (this.getSizes(true) * this.animateNumber) + this.getExtraIteration()) {
       this.iteration = -1;
       this.setState({ isDrawing: false, currentHighlight: teams[lastTeamChoosedIndex].name, teams: lastTeamChoosed });
       this.name.focus();
