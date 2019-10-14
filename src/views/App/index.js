@@ -84,22 +84,18 @@ export default class App extends Component {
   }
 
   handleDrawTeam = () => {
-    const { lastTeamChoosedIndex } = this.state;
-    let teamIndex = null;
+    let teamIndex;
     const min = 0;
     const max = this.getSizes(true) - 1;
 
     if (this.isTeamsAlreadyFull()) {
       teamIndex = null;
-    } else if (lastTeamChoosedIndex === null) {
-      teamIndex = Math.floor(Math.random() * (max - min + 1)) + min;
-    }
-    else if (this.getCurrentMaxTeam(false) - this.getCurrentMinTeam(false) > 1) {
+    } else if (this.getCurrentMaxTeam(false) - this.getCurrentMinTeam(false) > 1) {
       teamIndex = this.getCurrentMinTeam();
     }
     else {
       do {
-        teamIndex = Math.floor(Math.random() * (max - min)) + min;
+        teamIndex = Math.floor(Math.random() * (max - min + 1)) + min;
       } while (teamIndex === this.getCurrentMaxTeam() || this.isTeamAlreadyFull(teamIndex));
     }
 
