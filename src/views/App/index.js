@@ -9,6 +9,7 @@ export default class App extends Component {
   animateNumber = defaultValues.defaultAnimationTimes;
   state = {
     total: defaultValues.totalDefault,
+    animationMs: defaultValues.defaultAnimationMs,
     isDrawing: false,
     isShowingSelected: false,
     currentInputText: '',
@@ -141,13 +142,15 @@ export default class App extends Component {
   }
 
   animateDraw = () => {
+    const { animationMs } = this.state;
+
     if (this.drawIteration >= (this.getSizes(true) * this.animateNumber) + this.getExtraIteration()) {
       this.drawIteration = 0;
-      this.setState({ isDrawing: false, isShowingSelected: true });
+      this.setState({ isDrawing: false, isShowingSelected: true, animationMs: defaultValues.defaultAnimationMs });
       return;
     }
 
-    this.setState({ currentHighlight: Array(this.animateNumber + 1).fill(this.getAllTeamNames()).flat()[this.drawIteration] });
+    this.setState({ currentHighlight: Array(this.animateNumber + 1).fill(this.getAllTeamNames()).flat()[this.drawIteration], animationMs: animationMs + defaultValues.slowDownAnimationRate });
     this.drawIteration += 1
   }
 
@@ -166,8 +169,10 @@ export default class App extends Component {
   }
 
   componentDidUpdate() {
-    if (this.state.isDrawing) setTimeout(this.animateDraw, defaultValues.defaultAnimationMs);
-    if (this.state.isShowingSelected) setTimeout(this.animateSelected, defaultValues.defaultAnimationMs);
+    const { isDrawing, isShowingSelected, animationMs } = this.state;
+
+    if (isDrawing) setTimeout(this.animateDraw, animationMs);
+    if (isShowingSelected) setTimeout(this.animateSelected, animationMs);
   }
 
   async componentDidMount() {

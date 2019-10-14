@@ -1,5 +1,6 @@
 {
-    "defaultAnimationMs": 150,
-    "defaultAnimationTimes": 3,
-    "totalDefault": 24
+    "defaultAnimationMs": 128,
+    "defaultAnimationTimes": 2,
+    "totalDefault": 24,
+    "slowDownAnimationRate": 24
 }
