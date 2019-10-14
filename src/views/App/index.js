@@ -87,7 +87,7 @@ export default class App extends Component {
     const { lastTeamChoosedIndex } = this.state;
     let teamIndex = null;
     const min = 0;
-    const max = this.getSizes(true);
+    const max = this.getSizes(true) - 1;
 
     if (this.isTeamsAlreadyFull()) {
       teamIndex = null;
@@ -142,11 +142,11 @@ export default class App extends Component {
   }
 
   animateDraw = () => {
-    const { animationMs } = this.state;
+    const { animationMs, teams, lastTeamChoosedIndex } = this.state;
 
     if (this.drawIteration >= (this.getSizes(true) * this.animateNumber) + this.getExtraIteration()) {
       this.drawIteration = 0;
-      this.setState({ isDrawing: false, isShowingSelected: true, animationMs: defaultValues.defaultAnimationMs });
+      this.setState({ isDrawing: false, isShowingSelected: true, animationMs: defaultValues.defaultAnimationMs, currentHighlight: teams[lastTeamChoosedIndex].name });
       return;
     }
 
@@ -164,7 +164,7 @@ export default class App extends Component {
       return;
     }
 
-    this.showSelected % 2 === 0 ? this.setState({ currentHighlight: teams[lastTeamChoosedIndex].name }) : this.setState({ currentHighlight: '' });
+    this.showSelected % 2 !== 0 ? this.setState({ currentHighlight: teams[lastTeamChoosedIndex].name }) : this.setState({ currentHighlight: '' });
     this.showSelected += 1
   }
 
