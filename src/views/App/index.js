@@ -4,8 +4,8 @@ import defaultValues from '../../config/defaultValues.json';
 import '../../styles/main.css';
 
 export default class App extends Component {
-  drawIteration = -1;
-  showSelected = -1;
+  drawIteration = 0;
+  showSelected = 0;
   animateNumber = defaultValues.defaultAnimationTimes;
   state = {
     total: defaultValues.totalDefault,
@@ -128,7 +128,7 @@ export default class App extends Component {
     } else if(!drawnTeam) {
       alert('Total number of people reached');
     } else {
-      this.getAllMembersNames().indexOf(currentInputText) > -1 ? alert('Member already in a team') : alert('Please input a valid name');
+      this.getAllMembersNames().indexOf(currentInputText) >= 0 ? alert('Member already in a team') : alert('Please input a valid name');
     }
 
     event.preventDefault();
@@ -137,32 +137,32 @@ export default class App extends Component {
   getExtraIteration = () => {
     const { lastTeamChoosedIndex } = this.state;
 
-    return lastTeamChoosedIndex === (this.getSizes(true) - 1) ? -1 : lastTeamChoosedIndex;
+    return lastTeamChoosedIndex === (this.getSizes(true) - 1) ? 0 : lastTeamChoosedIndex;
   }
 
   animateDraw = () => {
     if (this.drawIteration >= (this.getSizes(true) * this.animateNumber) + this.getExtraIteration()) {
-      this.drawIteration = -1;
+      this.drawIteration = 0;
       this.setState({ isDrawing: false, isShowingSelected: true });
       return;
     }
 
-    this.drawIteration += 1
     this.setState({ currentHighlight: Array(this.animateNumber + 1).fill(this.getAllTeamNames()).flat()[this.drawIteration] });
+    this.drawIteration += 1
   }
 
   animateSelected = () => {
     const { lastTeamChoosedIndex, teams, lastTeamChoosed } = this.state;
 
     if (this.showSelected > 3) {
-      this.showSelected = -1;
+      this.showSelected = 0;
       this.setState({ isShowingSelected: false, teams: lastTeamChoosed, currentHighlight: '' });
       this.name.focus();
       return;
     }
 
-    this.showSelected += 1
     this.showSelected % 2 === 0 ? this.setState({ currentHighlight: teams[lastTeamChoosedIndex].name }) : this.setState({ currentHighlight: '' });
+    this.showSelected += 1
   }
 
   componentDidUpdate() {
