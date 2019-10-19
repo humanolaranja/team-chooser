@@ -1,4 +1,4 @@
-# Pokemon Chooser
+# Team Chooser
 A software to randomize members in groups
 
 You can config teams availables in `src/config/teams.json` and follow the template. Image assets is in `src/assets/images`
