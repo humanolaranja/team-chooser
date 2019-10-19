@@ -1,4 +1,5 @@
 {
+    "animate": true,
     "defaultAnimationMs": 128,
     "defaultAnimationTimes": 2,
     "totalDefault": 24,

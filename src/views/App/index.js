@@ -120,7 +120,7 @@ export default class App extends Component {
       const newTeam = [{ ...drawnTeam, members: [...drawnTeam.members, currentInputText] }]
       const newTeams = teams.map(obj => newTeam.find(o => o.name === obj.name) || obj);
 
-      this.handleDrawing();
+      defaultValues.animate ? this.handleDrawing() : this.setStateWithoutAnimation(newTeams, drawnTeamIndex);
       this.setState({ currentInputText: '', lastTeamChoosed: newTeams, lastTeamChoosedIndex: drawnTeamIndex });
     } else if(!drawnTeam) {
       alert('Total number of people reached');
@@ -135,6 +135,10 @@ export default class App extends Component {
     const { lastTeamChoosedIndex } = this.state;
 
     return lastTeamChoosedIndex === (this.getSizes(true) - 1) ? 0 : lastTeamChoosedIndex;
+  }
+
+  setStateWithoutAnimation = (teams, lastTeamChoosedIndex) => {
+    this.setState({ teams, lastTeamChoosedIndex });
   }
 
   animateDraw = () => {
@@ -166,9 +170,10 @@ export default class App extends Component {
 
   componentDidUpdate() {
     const { isDrawing, isShowingSelected, animationMs } = this.state;
-
-    if (isDrawing) setTimeout(this.animateDraw, animationMs);
-    if (isShowingSelected) setTimeout(this.animateSelected, animationMs);
+    if(defaultValues.animate) {
+      if (isDrawing) setTimeout(this.animateDraw, animationMs);
+      if (isShowingSelected) setTimeout(this.animateSelected, animationMs);
+    }
   }
 
   async componentDidMount() {
