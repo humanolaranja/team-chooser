@@ -78,6 +78,14 @@ export default class App extends Component {
     return index ? sizes.indexOf(Math.max(...sizes)) : Math.max(...sizes);
   }
 
+  getMaxPointsIndex = () => {
+    const { teams } = this.state;
+    const pointsArray = teams.map(team => parseInt(team.points));
+    const indexOfAll = (arr, val) => arr.reduce((acc, el, i) => (el === val ? [...acc, i] : acc), []);
+
+    return indexOfAll(pointsArray, Math.max(...pointsArray));
+  }
+
   getCurrentMinTeam = (index = true) => {
     const sizes = this.getSizes();
 
@@ -231,8 +239,8 @@ export default class App extends Component {
           <div >
             <div className="teams-container">
               {teams.map((team, index) => (
-                <div key={`${index}-${team.name}-points`} className="points-container" style={{ backgroundColor: team.color }}>
-                  <input value={team.points} id={index} className="points-input" style={{ backgroundColor: team.color }} onChange={this.handleChangePoint} />
+                <div key={`${index}-${team.name}-points`} className={'points-container ' + (this.getMaxPointsIndex().indexOf(index) >= 0 ? 'highlight' : '')} style={{ backgroundColor: team.color }}>
+                  <input value={team.points} id={index} className={'points-input ' + (this.getMaxPointsIndex().indexOf(index) >= 0 ? 'highlight' : '')} style={{ backgroundColor: team.color }} onChange={this.handleChangePoint} />
                 </div>
               ))}
             </div>
