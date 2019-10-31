@@ -11,6 +11,7 @@ export default class App extends Component {
     total: defaultValues.totalDefault,
     animationMs: defaultValues.defaultAnimationMs,
     isDrawing: false,
+    full: false,
     isShowingSelected: false,
     currentInputText: '',
     currentHighlight: '',
@@ -121,9 +122,9 @@ export default class App extends Component {
       const newTeams = teams.map(obj => newTeam.find(o => o.name === obj.name) || obj);
 
       defaultValues.animate ? this.handleDrawing() : this.setStateWithoutAnimation(newTeams, drawnTeamIndex);
-      this.setState({ currentInputText: '', lastTeamChoosed: newTeams, lastTeamChoosedIndex: drawnTeamIndex });
-    } else if(!drawnTeam) {
-      alert('Total number of people reached');
+      this.setState({ currentInputText: '', lastTeamChoosed: newTeams, lastTeamChoosedIndex: drawnTeamIndex }, () => {
+        this.checkfull();
+      });
     } else {
       this.getAllMembersNames().indexOf(currentInputText) >= 0 ? alert('Member already in a team') : alert('Please input a valid name');
     }
@@ -159,18 +160,30 @@ export default class App extends Component {
 
     if (this.showSelected > 3) {
       this.showSelected = 0;
-      this.setState({ isShowingSelected: false, teams: lastTeamChoosed, currentHighlight: '' });
-      this.name.focus();
-      return;
+      this.setState({ isShowingSelected: false, teams: lastTeamChoosed, currentHighlight: '' }, () => {
+        this.checkFull(true);
+      });
+      return this.name ? this.name.focus() : 0;
     }
 
     this.showSelected % 2 !== 0 ? this.setState({ currentHighlight: teams[lastTeamChoosedIndex].name }) : this.setState({ currentHighlight: '' });
     this.showSelected += 1
   }
 
+  checkFull = (timeout = false) => {
+    if (this.isTeamsAlreadyFull()) {
+      timeout ? setTimeout(this.setFull, 100) : this.setFull();
+    }
+  }
+
+  setFull = () => {
+    alert('Total number of people reached');
+    this.setState({ full: true });
+  }
+
   componentDidUpdate() {
     const { isDrawing, isShowingSelected, animationMs } = this.state;
-    if(defaultValues.animate) {
+    if (defaultValues.animate) {
       if (isDrawing) setTimeout(this.animateDraw, animationMs);
       if (isShowingSelected) setTimeout(this.animateSelected, animationMs);
     }
@@ -183,26 +196,31 @@ export default class App extends Component {
     } while (!total || isNaN(total.replace(/\s/g, "-")));
 
     this.setState({ teams, total });
-    this.name.focus();
+    return this.name ? this.name.focus() : 0;
   }
 
   render() {
-    const { currentInputText, currentHighlight, teams, isDrawing } = this.state;
+    const { currentInputText, currentHighlight, teams, isDrawing, full } = this.state;
 
     return (
       <div>
-        <div className="form-container">
-          <form className="form-container" onSubmit={this.handleSubmit}>
-            <input
-              ref={(input) => { this.name = input; }}
-              type="text"
-              value={currentInputText}
-              disabled={isDrawing}
-              onChange={this.handleChange}
-            />
-            <input type="submit" value=">" />
-          </form>
-        </div>
+        {!full && (
+          <div className="form-container">
+            <form className="form-container" onSubmit={this.handleSubmit}>
+              <input
+                ref={(input) => { this.name = input; }}
+                type="text"
+                value={currentInputText}
+                disabled={isDrawing}
+                onChange={this.handleChange}
+              />
+              <input type="submit" value=">" />
+            </form>
+          </div>
+        )}
+        {full && (
+          <div className="form-container"></div>
+        )}
         <div className="teams-container">
           {teams.map((team, index) => {
             let imageSource;
