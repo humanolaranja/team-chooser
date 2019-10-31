@@ -106,6 +106,15 @@ export default class App extends Component {
   handleChange = (event) => {
     this.setState({ currentInputText: event.target.value });
   }
+  
+  handleChangePoint = (event) => {
+    const { teams } = this.state;
+    const team = teams[event.target.id];
+    const newTeam = [{ ...team, points: event.target.value }];
+    const newTeams = teams.map(obj => newTeam.find(o => o.name === obj.name) || obj);
+    
+    this.setState({ teams: newTeams });
+  }
 
   handleDrawing = () => {
     if (!this.state.isDrawing)
@@ -219,7 +228,15 @@ export default class App extends Component {
           </div>
         )}
         {full && (
-          <div className="form-container"></div>
+          <div >
+            <div className="teams-container">
+              {teams.map((team, index) => (
+                <div key={`${index}-${team.name}-points`} className="points-container" style={{ backgroundColor: team.color }}>
+                  <input value={team.points} id={index} className="points-input" style={{ backgroundColor: team.color }} onChange={this.handleChangePoint} />
+                </div>
+              ))}
+            </div>
+          </div>
         )}
         <div className="teams-container">
           {teams.map((team, index) => {
@@ -231,12 +248,12 @@ export default class App extends Component {
             }
             return (
               <div key={`${index}-${team.name}`} className={'team-container ' + (team.name === currentHighlight ? 'highlight' : '')} style={{ backgroundColor: team.color }}>
-                <h1>{team.name}</h1>
+                <h2>{team.name}</h2>
                 <img src={imageSource} alt={team.name} title={team.name} />
                 <div className="members-container">
                   {team.members.map((member, index) => {
                     return (
-                      <h4 key={`${index}-${team.name}`}>{member}</h4>
+                      <h5 key={`${index}-${team.name}`}>{member}</h5>
                     )
                   })}
                 </div>

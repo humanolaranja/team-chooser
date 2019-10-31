@@ -3,24 +3,28 @@
       "name": "Bulbassauro",
       "color": "#374D2C",
       "imageUrl": "bulbassauro.png",
+      "points": 0,
       "members": []
     },
     {
       "name": "Charmander",
       "color": "#8F4A43",
       "imageUrl": "charmander.png",
+      "points": 0,
       "members": []
     },
     {
       "name": "Squirtle",
       "color": "#334555",
       "imageUrl": "squirtle.png",
+      "points": 0,
       "members": []
     },
     {
       "name": "Pikachu",
       "color": "#E4BE43",
       "imageUrl": "pikachu.png",
+      "points": 0,
       "members": []
     }
 ]
