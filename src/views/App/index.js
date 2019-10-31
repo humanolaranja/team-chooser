@@ -122,9 +122,7 @@ export default class App extends Component {
       const newTeams = teams.map(obj => newTeam.find(o => o.name === obj.name) || obj);
 
       defaultValues.animate ? this.handleDrawing() : this.setStateWithoutAnimation(newTeams, drawnTeamIndex);
-      this.setState({ currentInputText: '', lastTeamChoosed: newTeams, lastTeamChoosedIndex: drawnTeamIndex }, () => {
-        this.checkfull();
-      });
+      this.setState({ currentInputText: '', lastTeamChoosed: newTeams, lastTeamChoosedIndex: drawnTeamIndex });
     } else {
       this.getAllMembersNames().indexOf(currentInputText) >= 0 ? alert('Member already in a team') : alert('Please input a valid name');
     }
@@ -139,7 +137,9 @@ export default class App extends Component {
   }
 
   setStateWithoutAnimation = (teams, lastTeamChoosedIndex) => {
-    this.setState({ teams, lastTeamChoosedIndex });
+    this.setState({ teams, lastTeamChoosedIndex }, () => {
+      this.checkFull(true);
+    });
   }
 
   animateDraw = () => {
