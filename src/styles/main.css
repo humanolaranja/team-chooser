@@ -51,11 +51,12 @@ input[type="submit"]:active {
 }
 
 .points-input {
-  text-align: center; 
+  text-align: center;
   border: 0;
   padding: 0 0 0 12px;
   color: #fff;
   height: 100%;
+  width: 100%;
   outline-width: 0;
   font-size: 32px;
 }
